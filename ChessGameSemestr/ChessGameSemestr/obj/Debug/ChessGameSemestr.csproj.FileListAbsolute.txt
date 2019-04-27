@@ -18,3 +18,13 @@ E:\rep\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.csproj.Gener
 E:\rep\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.csproj.CoreCompileInputs.cache
 E:\rep\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.exe
 E:\rep\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.pdb
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\bin\Debug\ChessGameSemestr.exe.config
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\bin\Debug\ChessGameSemestr.exe
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\bin\Debug\ChessGameSemestr.pdb
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.csprojAssemblyReference.cache
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.Form1.resources
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.Properties.Resources.resources
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.csproj.GenerateResource.cache
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.csproj.CoreCompileInputs.cache
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.exe
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.pdb
