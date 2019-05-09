@@ -19,6 +19,9 @@
             }
             base.Dispose(disposing);
         }
+
+        private System.Windows.Forms.Button close;
+        private System.Windows.Forms.Button button1;
     }
 }
 
