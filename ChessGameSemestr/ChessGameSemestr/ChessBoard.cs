@@ -8,12 +8,14 @@ namespace ChessGameSemestr
     public class ChessBoard
     {
 
-        public List<Figure> Figures = new List<Figure>();
+        private List<Figure> Figures = new List<Figure>();
         private Form1 form;
         public ChessBoard(Form1 form)
         {
             this.form = form;
+            form.MouseClick += new MouseEventHandler(Form_MouseClick);
         }
+
         public void Draw()
         {
             form.Paint += new PaintEventHandler(DrawField);
@@ -109,7 +111,61 @@ namespace ChessGameSemestr
             Figures.Add(new Figure(new Point(340, 560), "King", true, new Bitmap(Image.FromFile(@"res/kingW.png"))));
         }
 
+        //private void DrawEmptyRectangle(object sender, PaintEventArgs e)
+        //{
+        //    Graphics g = e.Graphics;
+        //    Brush br = new SolidBrush(Color.Red);
+        //    g.DrawRectangle(new Pen(br), new Rectangle(prevClick, new Size(80, 80)));
+        //}
+
         #endregion
 
+        private bool isClicked = false;
+        private Point prevClick;
+        private Point nextClick;
+        private void Form_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Location.X >= 20 && e.Location.X <= 660 && e.Location.Y >= 0 && e.Location.Y <= 640)
+            {
+                Point click = GetClickLocation(e.Location);
+                if (isClicked)
+                {
+                    nextClick = click;
+                    //form.Paint += new PaintEventHandler(DrawEmptyRectangle);
+                }
+                else
+                {
+                    prevClick = click;
+                    isClicked = true;
+                }
+            }
+        }
+
+        private Point GetClickLocation(Point ClickPoint)
+        {
+            int X = ClickPoint.X;
+            int Y = ClickPoint.Y;
+            int prevX = 20;
+            for (int currX = 100; currX <= 660; currX += 80)
+            {
+                if (X >= prevX && X <= currX)
+                {
+                    X = prevX;
+                    break;
+                }
+                else prevX = currX;
+            }
+            int prevY = 0;
+            for (int currY = 80; currY <= 640; currY += 80)
+            {
+                if (Y >= prevY && Y <= currY)
+                {
+                    Y = prevY;
+                    break;
+                }
+                else prevY = currY;
+            }
+            return new Point(X, Y);
+        }
     }
 }
