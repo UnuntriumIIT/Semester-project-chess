@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace ChessGameSemestr
 {
@@ -14,7 +15,7 @@ namespace ChessGameSemestr
         {
             this.form = form;
             form.MouseClick += new MouseEventHandler(Form_MouseClick);
-        }
+        }      
 
         public void Draw()
         {
@@ -111,18 +112,11 @@ namespace ChessGameSemestr
             Figures.Add(new Figure(new Point(340, 560), "King", true, new Bitmap(Image.FromFile(@"res/kingW.png"))));
         }
 
-        //private void DrawEmptyRectangle(object sender, PaintEventArgs e)
-        //{
-        //    Graphics g = e.Graphics;
-        //    Brush br = new SolidBrush(Color.Red);
-        //    g.DrawRectangle(new Pen(br), new Rectangle(prevClick, new Size(80, 80)));
-        //}
-
         #endregion
 
         private bool isClicked = false;
         private Point prevClick;
-        private Point nextClick;
+        //private Point nextClick;
         private void Form_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Location.X >= 20 && e.Location.X <= 660 && e.Location.Y >= 0 && e.Location.Y <= 640)
@@ -130,8 +124,17 @@ namespace ChessGameSemestr
                 Point click = GetClickLocation(e.Location);
                 if (isClicked)
                 {
-                    nextClick = click;
-                    //form.Paint += new PaintEventHandler(DrawEmptyRectangle);
+                    //nextClick = click;
+                    using (Graphics g = form.CreateGraphics())
+                    {
+                        Brush br = new SolidBrush(Color.Red);
+                        Pen p = new Pen(br);
+                        Rectangle r = new Rectangle(prevClick, new Size(80, 80));
+                        g.DrawRectangle(p, r);
+                        g.FillRectangle(br, r);
+                        p.Dispose();
+                        isClicked = false;
+                    }
                 }
                 else
                 {
