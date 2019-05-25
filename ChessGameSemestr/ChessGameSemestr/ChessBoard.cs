@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 
 namespace ChessGameSemestr
 {
     public class ChessBoard
     {
-
+        #region Variables
         private List<Figure> Figures = new List<Figure>();
+        private List<PartOfBoard> Board = new List<PartOfBoard>();
         private Form1 form;
+        private bool isClickedBefore = false;
+        private Point prevClick;
+        private Point nextClick;
+        private Color currColor;
+        private Figure currFigure = null;
+        #endregion
+
         public ChessBoard(Form1 form)
         {
             this.form = form;
@@ -22,6 +28,7 @@ namespace ChessGameSemestr
             form.Paint += new PaintEventHandler(DrawField);
             form.Paint += new PaintEventHandler(DrawSigns);
             form.Paint += new PaintEventHandler(DrawFigures);
+            FillTheBoard();
         }
 
         #region Drawing_Methods
@@ -63,8 +70,8 @@ namespace ChessGameSemestr
 
         private void DrawSigns(object sender, PaintEventArgs e)
         {
-            var signs = new [] { "A", "B", "C", "D", "E", "F", "G", "H",
-                                  "1", "2", "3", "4", "5", "6", "7", "8" };
+            var signs = new[] { "A", "B", "C", "D", "E", "F", "G", "H",
+                                "1", "2", "3", "4", "5", "6", "7", "8" };
             var g = e.Graphics;
             var brushForString = new SolidBrush(Color.Black);
             var x = 0;
@@ -87,59 +94,52 @@ namespace ChessGameSemestr
             }
         }
 
-        private void FillFigures()
+        private void DrawMove(Graphics g)
         {
-            for(int i = 0; i < 8; i++)
-            { 
-                Figures.Add(new Figure(new Point(i * 80 + 20, 80), "Pawn", false, Image.FromFile(@"res/pawnB.png")));
-                Figures.Add(new Figure(new Point(i * 80 + 20, 480), "Pawn", true, Image.FromFile(@"res/pawnW.png")));
-            }
-            Figures.Add(new Figure(new Point(20, 0), "Rook", false, Image.FromFile(@"res/rookB.png")));
-            Figures.Add(new Figure(new Point(580, 0), "Rook", false, Image.FromFile(@"res/rookB.png")));
-            Figures.Add(new Figure(new Point(100, 0), "Knight", false, Image.FromFile(@"res/knightB.png")));
-            Figures.Add(new Figure(new Point(500, 0), "Knight", false, Image.FromFile(@"res/knightB.png")));
-            Figures.Add(new Figure(new Point(180, 0), "Bishop", false, Image.FromFile(@"res/bishopB.png")));
-            Figures.Add(new Figure(new Point(420, 0), "Bishop", false, Image.FromFile(@"res/bishopB.png")));
-            Figures.Add(new Figure(new Point(260, 0), "Queen", false, Image.FromFile(@"res/queenB.png")));
-            Figures.Add(new Figure(new Point(340, 0), "King", false, Image.FromFile(@"res/kingB.png")));
-            Figures.Add(new Figure(new Point(20, 560), "Rook", true, new Bitmap(Image.FromFile(@"res/rookW.png"))));
-            Figures.Add(new Figure(new Point(580, 560), "Rook", true, new Bitmap(Image.FromFile(@"res/rookW.png"))));
-            Figures.Add(new Figure(new Point(100, 560), "Knight", true, new Bitmap(Image.FromFile(@"res/knightW.png"))));
-            Figures.Add(new Figure(new Point(500, 560), "Knight", true, new Bitmap(Image.FromFile(@"res/knightW.png"))));
-            Figures.Add(new Figure(new Point(180, 560), "Bishop", true, new Bitmap(Image.FromFile(@"res/bishopW.png"))));
-            Figures.Add(new Figure(new Point(420, 560), "Bishop", true, new Bitmap(Image.FromFile(@"res/bishopW.png"))));
-            Figures.Add(new Figure(new Point(260, 560), "Queen", true, new Bitmap(Image.FromFile(@"res/queenW.png"))));
-            Figures.Add(new Figure(new Point(340, 560), "King", true, new Bitmap(Image.FromFile(@"res/kingW.png"))));
+            Brush br = new SolidBrush(currColor);
+            Pen p = new Pen(br);
+            Rectangle r = new Rectangle(prevClick, new Size(80, 80));
+            g.DrawRectangle(p, r);
+            g.FillRectangle(br, r);
+            p.Dispose();
+
+            g.DrawImage(currFigure.Icon, nextClick.X, nextClick.Y, 70, 70);
+            Figures.Remove(currFigure);
+            Figures.Add(new Figure(nextClick, currFigure.Type, currFigure.isWhite, currFigure.Icon));
         }
 
         #endregion
 
-        private bool isClicked = false;
-        private Point prevClick;
-        //private Point nextClick;
+        #region Logic
         private void Form_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Location.X >= 20 && e.Location.X <= 660 && e.Location.Y >= 0 && e.Location.Y <= 640)
             {
                 Point click = GetClickLocation(e.Location);
-                if (isClicked)
+                if (isClickedBefore)
                 {
-                    //nextClick = click;
                     using (Graphics g = form.CreateGraphics())
                     {
-                        Brush br = new SolidBrush(Color.Red);
-                        Pen p = new Pen(br);
-                        Rectangle r = new Rectangle(prevClick, new Size(80, 80));
-                        g.DrawRectangle(p, r);
-                        g.FillRectangle(br, r);
-                        p.Dispose();
-                        isClicked = false;
+                        if (currFigure != null)
+                        {
+                            nextClick = click;
+                            DrawMove(g);
+                            isClickedBefore = false;
+                        }
+                        else
+                            DrawMove(g);
                     }
+                    currColor = Board.WhatColorNow(click);
                 }
                 else
                 {
-                    prevClick = click;
-                    isClicked = true;
+                    currFigure = Figures.FindAndGetByPoint(click);
+                    if (currFigure != null)
+                    {
+                        currColor = Board.WhatColorNow(click);
+                        prevClick = click;
+                        isClickedBefore = true;
+                    }
                 }
             }
         }
@@ -170,5 +170,57 @@ namespace ChessGameSemestr
             }
             return new Point(X, Y);
         }
+
+        #endregion
+
+        #region Filling_Methods
+
+        private void FillTheBoard()
+        {
+            var squareColor = Color.Black;
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Point point = new Point(j * 80 + 20, i * 80);
+                    Board.Add(new PartOfBoard(point, squareColor));
+                    if (squareColor == Color.Black)
+                        squareColor = Color.White;
+                    else
+                        squareColor = Color.Black;
+                }
+                if (squareColor == Color.Black)
+                    squareColor = Color.White;
+                else
+                    squareColor = Color.Black;
+            }
+        }
+
+        private void FillFigures()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Figures.Add(new Figure(new Point(i * 80 + 20, 80), "Pawn", false, Image.FromFile(@"res/pawnB.png")));
+                Figures.Add(new Figure(new Point(i * 80 + 20, 480), "Pawn", true, Image.FromFile(@"res/pawnW.png")));
+            }
+            Figures.Add(new Figure(new Point(20, 0), "Rook", false, Image.FromFile(@"res/rookB.png")));
+            Figures.Add(new Figure(new Point(580, 0), "Rook", false, Image.FromFile(@"res/rookB.png")));
+            Figures.Add(new Figure(new Point(100, 0), "Knight", false, Image.FromFile(@"res/knightB.png")));
+            Figures.Add(new Figure(new Point(500, 0), "Knight", false, Image.FromFile(@"res/knightB.png")));
+            Figures.Add(new Figure(new Point(180, 0), "Bishop", false, Image.FromFile(@"res/bishopB.png")));
+            Figures.Add(new Figure(new Point(420, 0), "Bishop", false, Image.FromFile(@"res/bishopB.png")));
+            Figures.Add(new Figure(new Point(260, 0), "Queen", false, Image.FromFile(@"res/queenB.png")));
+            Figures.Add(new Figure(new Point(340, 0), "King", false, Image.FromFile(@"res/kingB.png")));
+            Figures.Add(new Figure(new Point(20, 560), "Rook", true, new Bitmap(Image.FromFile(@"res/rookW.png"))));
+            Figures.Add(new Figure(new Point(580, 560), "Rook", true, new Bitmap(Image.FromFile(@"res/rookW.png"))));
+            Figures.Add(new Figure(new Point(100, 560), "Knight", true, new Bitmap(Image.FromFile(@"res/knightW.png"))));
+            Figures.Add(new Figure(new Point(500, 560), "Knight", true, new Bitmap(Image.FromFile(@"res/knightW.png"))));
+            Figures.Add(new Figure(new Point(180, 560), "Bishop", true, new Bitmap(Image.FromFile(@"res/bishopW.png"))));
+            Figures.Add(new Figure(new Point(420, 560), "Bishop", true, new Bitmap(Image.FromFile(@"res/bishopW.png"))));
+            Figures.Add(new Figure(new Point(260, 560), "Queen", true, new Bitmap(Image.FromFile(@"res/queenW.png"))));
+            Figures.Add(new Figure(new Point(340, 560), "King", true, new Bitmap(Image.FromFile(@"res/kingW.png"))));
+        }
+
+        #endregion
     }
 }

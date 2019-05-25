@@ -7,16 +7,18 @@ namespace ChessGameSemestr
     {
         public static Figure FindAndGetByPoint(this List<Figure> list, Point p)
         {
-            Figure output = null;
-            for(int i = 0; i < list.Count; i++)
-            {
-                if (list[i].Position.Equals(p))
-                {
-                    output = list[i];
-                    break;
-                }
-            }
-            return output;
+            foreach (var e in list)
+                if (e.Position.Equals(p))
+                    return e;
+            return null;
+        }
+
+        public static Color WhatColorNow(this List<PartOfBoard> list, Point p)
+        {
+            foreach(var e in list)
+                if (e.Point.Equals(p))
+                    return e.Color;
+            return Color.Empty;
         }
     }
 }
