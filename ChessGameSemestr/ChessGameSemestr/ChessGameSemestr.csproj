@@ -84,5 +84,21 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="resources\bishopB.png" />
+    <Content Include="resources\bishopW.png" />
+    <Content Include="resources\icon.ico" />
+    <Content Include="resources\kingB.png" />
+    <Content Include="resources\kingW.png" />
+    <Content Include="resources\knightB.png" />
+    <Content Include="resources\knightW.png" />
+    <Resource Include="resources\pawnB.png" />
+    <Content Include="resources\pawnW.png" />
+    <Content Include="resources\queenB.png" />
+    <Content Include="resources\queenW.png" />
+    <Content Include="resources\rookB.png" />
+    <Content Include="resources\rookW.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

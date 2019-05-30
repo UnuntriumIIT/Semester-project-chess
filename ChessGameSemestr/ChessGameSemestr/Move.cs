@@ -10,6 +10,7 @@ namespace ChessGameSemestr
         public Point From;
         public Point To;
         private List<Figure> figs;
+        private Figure target;
 
         public Move(Figure Figure, Point From, Point To, List<Figure> Figures)
         {
@@ -17,6 +18,7 @@ namespace ChessGameSemestr
             this.From = From;
             this.To = To;
             figs = Figures;
+            target = figs.FindAndGetByPoint(To);
         }
 
         public bool isRight()
@@ -28,13 +30,142 @@ namespace ChessGameSemestr
                 case "Pawn":
                     result = CheckMoveForPawn();
                     break;
+                case "Rook":
+                    result = CheckMoveForRook();
+                    break;
+                case "Bishop":
+                    result = CheckMoveForBishop();
+                    break;
+                case "King":
+                    result = CheckMoveForKing();
+                    break;
+                case "Knight":
+                    result = CheckMoveForKnight();
+                    break;
+                case "Queen":
+                    result = CheckMoveForQueen();
+                    break;
             }
             return result;
         }
 
+        private bool CheckMoveForQueen()
+        {
+            if (target == null)
+            {
+                if (From.X - To.X != 0 && From.Y - To.Y != 0)
+                    if (Math.Abs(From.X - To.X) == Math.Abs(From.Y - To.Y))
+                        return true;
+                if ((Math.Abs(From.X - To.X) <= 560 && From.Y - To.Y == 0)
+                    || Math.Abs(From.Y - To.Y) <= 560 && From.X - To.X == 0)
+                    return true;
+            }
+            else
+            {
+                if ((!target.isWhite && Figure.isWhite)
+                    || (target.isWhite && !Figure.isWhite))
+                {
+                    if (From.X - To.X != 0 && From.Y - To.Y != 0)
+                        if (Math.Abs(From.X - To.X) == Math.Abs(From.Y - To.Y))
+                            return true;
+                    if ((Math.Abs(From.X - To.X) <= 560 && From.Y - To.Y == 0)
+                    || Math.Abs(From.Y - To.Y) <= 560 && From.X - To.X == 0)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckMoveForKnight()
+        {
+            if (target == null)
+            {
+                if (Math.Abs(From.X - To.X) == 80 && Math.Abs(From.Y - To.Y) == 160)
+                    return true;
+                if (Math.Abs(From.Y - To.Y) == 80 && Math.Abs(From.X - To.X) == 160)
+                    return true;
+            }
+            else
+            {
+                if ((!target.isWhite && Figure.isWhite)
+                    || (target.isWhite && !Figure.isWhite))
+                {
+                    if (Math.Abs(From.X - To.X) == 80 && Math.Abs(From.Y - To.Y) == 160)
+                        return true;
+                    if (Math.Abs(From.Y - To.Y) == 80 && Math.Abs(From.X - To.X) == 160)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckMoveForKing()
+        {
+            if (target == null)
+            {
+                if (Math.Abs(From.X - To.X) == 80 && Math.Abs(From.Y - To.Y) == 80)
+                    return true;
+                if (Math.Abs(From.X - To.X) == 80 && Math.Abs(From.Y - To.Y) == 0)
+                    return true;
+                if (Math.Abs(From.X - To.X) == 0 && Math.Abs(From.Y - To.Y) == 80)
+                    return true;
+            }
+            else
+            {
+                if ((!target.isWhite && Figure.isWhite)
+                    || (target.isWhite && !Figure.isWhite))
+                {
+                    if (Math.Abs(From.X - To.X) == 80 && Math.Abs(From.Y - To.Y) == 80)
+                        return true;
+                    if (Math.Abs(From.X - To.X) == 80 && Math.Abs(From.Y - To.Y) == 0)
+                        return true;
+                    if (Math.Abs(From.X - To.X) == 0 && Math.Abs(From.Y - To.Y) == 80)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckMoveForBishop()
+        {
+            if (target == null)
+            {
+                if (From.X - To.X != 0 && From.Y - To.Y != 0)
+                    if (Math.Abs(From.X - To.X) == Math.Abs(From.Y - To.Y))
+                        return true;
+            }
+            else
+            {
+                if ((!target.isWhite && Figure.isWhite)
+                    || (target.isWhite && !Figure.isWhite))
+                    if (From.X - To.X != 0 && From.Y - To.Y != 0)
+                        if (Math.Abs(From.X - To.X) == Math.Abs(From.Y - To.Y))
+                            return true;
+            }
+            return false;
+        }
+
+        private bool CheckMoveForRook()
+        {
+            if (target == null)
+            {
+                if ((Math.Abs(From.X - To.X) <= 560 && From.Y - To.Y == 0) 
+                    || Math.Abs(From.Y - To.Y) <= 560 && From.X - To.X == 0)
+                    return true;
+            }
+            else
+            {
+                if ((!target.isWhite && Figure.isWhite) 
+                    || (target.isWhite && !Figure.isWhite))
+                    if ((Math.Abs(From.X - To.X) <= 560 && From.Y - To.Y == 0) 
+                        || Math.Abs(From.Y - To.Y) <= 560 && From.X - To.X == 0)
+                        return true;
+            }
+            return false;
+        }
+
         private bool CheckMoveForPawn()
         {
-            Figure target = figs.FindAndGetByPoint(To);
             if (target == null)
             {
                 if (Figure.isWhite)

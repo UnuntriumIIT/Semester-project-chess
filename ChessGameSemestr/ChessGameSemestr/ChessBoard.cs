@@ -21,6 +21,7 @@ namespace ChessGameSemestr
         {
             this.form = form;
             form.MouseClick += new MouseEventHandler(Form_MouseClick);
+            FillFigures();
         }      
 
         public void Draw()
@@ -60,7 +61,6 @@ namespace ChessGameSemestr
 
         private void DrawFigures(object sender, PaintEventArgs e)
         {
-            FillFigures();
             Graphics g = e.Graphics;
             for (int i = 0; i < Figures.Count; i++)
                 g.DrawImage(Figures[i].Icon, Figures[i].Position.X, Figures[i].Position.Y, 70, 70);
@@ -204,25 +204,25 @@ namespace ChessGameSemestr
         {
             for (int i = 0; i < 8; i++)
             {
-                Figures.Add(new Figure(new Point(i * 80 + 20, 80), "Pawn", false, Image.FromFile(@"res/pawnB.png"), true));
-                Figures.Add(new Figure(new Point(i * 80 + 20, 480), "Pawn", true, Image.FromFile(@"res/pawnW.png"),true));
+                Figures.Add(new Figure(new Point(i * 80 + 20, 80), "Pawn", false, Image.FromFile(@"../../resources/pawnB.png"), true));
+                Figures.Add(new Figure(new Point(i * 80 + 20, 480), "Pawn", true, Image.FromFile(@"../../resources/pawnW.png"),true));
             }
-            Figures.Add(new Figure(new Point(20, 0), "Rook", false, Image.FromFile(@"res/rookB.png"), false));
-            Figures.Add(new Figure(new Point(580, 0), "Rook", false, Image.FromFile(@"res/rookB.png"), false));
-            Figures.Add(new Figure(new Point(100, 0), "Knight", false, Image.FromFile(@"res/knightB.png"), false));
-            Figures.Add(new Figure(new Point(500, 0), "Knight", false, Image.FromFile(@"res/knightB.png"), false));
-            Figures.Add(new Figure(new Point(180, 0), "Bishop", false, Image.FromFile(@"res/bishopB.png"), false));
-            Figures.Add(new Figure(new Point(420, 0), "Bishop", false, Image.FromFile(@"res/bishopB.png"), false));
-            Figures.Add(new Figure(new Point(260, 0), "Queen", false, Image.FromFile(@"res/queenB.png"), false));
-            Figures.Add(new Figure(new Point(340, 0), "King", false, Image.FromFile(@"res/kingB.png"), false));
-            Figures.Add(new Figure(new Point(20, 560), "Rook", true, new Bitmap(Image.FromFile(@"res/rookW.png")), false));
-            Figures.Add(new Figure(new Point(580, 560), "Rook", true, new Bitmap(Image.FromFile(@"res/rookW.png")), false));
-            Figures.Add(new Figure(new Point(100, 560), "Knight", true, new Bitmap(Image.FromFile(@"res/knightW.png")), false));
-            Figures.Add(new Figure(new Point(500, 560), "Knight", true, new Bitmap(Image.FromFile(@"res/knightW.png")), false));
-            Figures.Add(new Figure(new Point(180, 560), "Bishop", true, new Bitmap(Image.FromFile(@"res/bishopW.png")), false));
-            Figures.Add(new Figure(new Point(420, 560), "Bishop", true, new Bitmap(Image.FromFile(@"res/bishopW.png")), false));
-            Figures.Add(new Figure(new Point(260, 560), "Queen", true, new Bitmap(Image.FromFile(@"res/queenW.png")), false));
-            Figures.Add(new Figure(new Point(340, 560), "King", true, new Bitmap(Image.FromFile(@"res/kingW.png")), false));
+            Figures.Add(new Figure(new Point(20, 0), "Rook", false, Image.FromFile(@"../../resources/rookB.png"), false));
+            Figures.Add(new Figure(new Point(580, 0), "Rook", false, Image.FromFile(@"../../resources/rookB.png"), false));
+            Figures.Add(new Figure(new Point(100, 0), "Knight", false, Image.FromFile(@"../../resources/knightB.png"), false));
+            Figures.Add(new Figure(new Point(500, 0), "Knight", false, Image.FromFile(@"../../resources/knightB.png"), false));
+            Figures.Add(new Figure(new Point(180, 0), "Bishop", false, Image.FromFile(@"../../resources/bishopB.png"), false));
+            Figures.Add(new Figure(new Point(420, 0), "Bishop", false, Image.FromFile(@"../../resources/bishopB.png"), false));
+            Figures.Add(new Figure(new Point(260, 0), "Queen", false, Image.FromFile(@"../../resources/queenB.png"), false));
+            Figures.Add(new Figure(new Point(340, 0), "King", false, Image.FromFile(@"../../resources/kingB.png"), false));
+            Figures.Add(new Figure(new Point(20, 560), "Rook", true, Image.FromFile(@"../../resources/rookW.png"), false));
+            Figures.Add(new Figure(new Point(580, 560), "Rook", true, Image.FromFile(@"../../resources/rookW.png"), false));
+            Figures.Add(new Figure(new Point(100, 560), "Knight", true, Image.FromFile(@"../../resources/knightW.png"), false));
+            Figures.Add(new Figure(new Point(500, 560), "Knight", true, Image.FromFile(@"../../resources/knightW.png"), false));
+            Figures.Add(new Figure(new Point(180, 560), "Bishop", true, Image.FromFile(@"../../resources/bishopW.png"), false));
+            Figures.Add(new Figure(new Point(420, 560), "Bishop", true, Image.FromFile(@"../../resources/bishopW.png"), false));
+            Figures.Add(new Figure(new Point(260, 560), "Queen", true, Image.FromFile(@"../../resources/queenW.png"), false));
+            Figures.Add(new Figure(new Point(340, 560), "King", true, Image.FromFile(@"../../resources/kingW.png"), false));
         }
 
         #endregion
