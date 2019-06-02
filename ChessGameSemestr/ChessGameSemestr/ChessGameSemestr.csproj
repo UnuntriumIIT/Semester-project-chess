@@ -47,6 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChessBoard.cs" />
+    <Compile Include="CustomMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomMessageBox.Designer.cs">
+      <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="ListExtension.cs" />
     <Compile Include="Figure.cs" />
     <Compile Include="Form1.cs">
@@ -59,6 +65,9 @@
     <Compile Include="PartOfBoard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CustomMessageBox.resx">
+      <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -86,19 +95,19 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="resources\bishopB.png" />
-    <Content Include="resources\bishopW.png" />
-    <Content Include="resources\icon.ico" />
-    <Content Include="resources\kingB.png" />
-    <Content Include="resources\kingW.png" />
-    <Content Include="resources\knightB.png" />
-    <Content Include="resources\knightW.png" />
-    <Resource Include="resources\pawnB.png" />
-    <Content Include="resources\pawnW.png" />
-    <Content Include="resources\queenB.png" />
-    <Content Include="resources\queenW.png" />
-    <Content Include="resources\rookB.png" />
-    <Content Include="resources\rookW.png" />
+    <Content Include="Resources\bishopB.png" />
+    <Content Include="Resources\bishopW.png" />
+    <Content Include="Resources\icon.ico" />
+    <Content Include="Resources\kingB.png" />
+    <Content Include="Resources\kingW.png" />
+    <Content Include="Resources\knightB.png" />
+    <Content Include="Resources\knightW.png" />
+    <Content Include="Resources\pawnB.png" />
+    <Content Include="Resources\pawnW.png" />
+    <Content Include="Resources\queenB.png" />
+    <Content Include="Resources\queenW.png" />
+    <Content Include="Resources\rookB.png" />
+    <Content Include="Resources\rookW.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

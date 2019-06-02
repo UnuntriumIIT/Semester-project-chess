@@ -28,4 +28,4 @@ C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj
 C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.csproj.CoreCompileInputs.cache
 C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.exe
 C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.pdb
-C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.g.resources
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.CustomMessageBox.resources

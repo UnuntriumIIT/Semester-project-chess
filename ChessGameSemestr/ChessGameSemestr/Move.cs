@@ -21,6 +21,24 @@ namespace ChessGameSemestr
             target = figs.FindAndGetByPoint(To);
         }
 
+        public override string ToString()
+        {
+            var f = GetCoord(From);
+            var t = GetCoord(To);
+            var c = "Black ";
+            if (Figure.isWhite)
+                c = "White ";
+            return c + Figure.Type.ToLower() + " from: " + f + " To: " + t;
+        }
+
+        private string GetCoord(Point p)
+        {
+            var letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+            var numbers = new[] { "8", "7", "6", "5", "4", "3", "2", "1" };
+
+            return letters[(p.X - 20) / 80] + numbers[p.Y / 80];
+        }
+
         public bool isRight()
         {
             string type = Figure.Type;

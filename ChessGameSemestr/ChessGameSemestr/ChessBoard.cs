@@ -15,6 +15,8 @@ namespace ChessGameSemestr
         private Point nextClick;
         private Color currColor;
         private Figure currFigure = null;
+        public bool isWhiteMovingNow { get; set; }
+        public bool isGameStarted { get; set; }
         #endregion
 
         public ChessBoard(Form1 form)
@@ -22,12 +24,16 @@ namespace ChessGameSemestr
             this.form = form;
             form.MouseClick += new MouseEventHandler(Form_MouseClick);
             FillFigures();
+            FillTheBoard();
+            isWhiteMovingNow = true;
+            isGameStarted = false;
         }      
 
         public void Draw()
         {
-            form.Paint += new PaintEventHandler(DrawField) + new PaintEventHandler(DrawSigns) + new PaintEventHandler(DrawFigures);
-            FillTheBoard();
+            form.Paint += new PaintEventHandler(DrawField) 
+                + new PaintEventHandler(DrawSigns) 
+                + new PaintEventHandler(DrawFigures);
         }
 
         #region Drawing_Methods
@@ -94,16 +100,23 @@ namespace ChessGameSemestr
 
         private void DrawMove(Graphics g)
         {
-            Brush br = new SolidBrush(currColor);
-            Pen p = new Pen(br);
-            Rectangle r = new Rectangle(prevClick, new Size(80, 80));
+            var br = new SolidBrush(currColor);
+            var p = new Pen(br);
+            var r = new Rectangle(prevClick, new Size(80, 80));
             g.DrawRectangle(p, r);
             g.FillRectangle(br, r);
             p.Dispose();
-
+            var target = Figures.FindAndGetByPoint(nextClick);
             g.DrawImage(currFigure.Icon, nextClick.X, nextClick.Y, 70, 70);
             Figures.Remove(currFigure);
-            Figures.Add(new Figure(nextClick, currFigure.Type, currFigure.isWhite, currFigure.Icon, false));
+            if (currFigure.Type != "Pawn")
+                Figures.Add(new Figure(nextClick, currFigure.Type, currFigure.isWhite, currFigure.Icon, false));
+            else
+                if ((nextClick.Y != 0 && currFigure.isWhite)
+                    || (nextClick.Y != 560 && !currFigure.isWhite))
+                    Figures.Add(new Figure(nextClick, currFigure.Type, currFigure.isWhite, currFigure.Icon, false));
+            if (target != null)
+                Figures.Remove(target);
         }
 
         #endregion
@@ -111,48 +124,127 @@ namespace ChessGameSemestr
         #region Logic
         private void Form_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Location.X >= 20 && e.Location.X <= 660 && e.Location.Y >= 0 && e.Location.Y <= 640)
+            using (Graphics g = form.CreateGraphics())
             {
-                Point click = GetClickLocation(e.Location);
-                if (isClickedBefore)
+                if (isGameStarted)
                 {
-                    using (Graphics g = form.CreateGraphics())
+                    if (e.Location.X >= 20 && e.Location.X <= 660 && e.Location.Y >= 0 && e.Location.Y <= 640)
                     {
-                        if (currFigure != null)
+                        var click = GetClickLocation(e.Location);
+                        if (isClickedBefore)
                         {
-                            Move move = new Move(currFigure, prevClick, click, Figures);
-                            if (move.isRight())
+                            if (currFigure != null)
                             {
-                                nextClick = click;
-                                DrawMove(g);
-                                if (currFigure.Type == "Pawn")
-                                    currFigure.isFirstMoveForPawn = false;
+                                if ((currFigure.isWhite && isWhiteMovingNow) || (!currFigure.isWhite && !isWhiteMovingNow))
+                                {
+                                    var move = new Move(currFigure, prevClick, click, Figures);
+                                    if (move.isRight())
+                                    {
+                                        nextClick = click;
+                                        DrawMove(g);
+                                        if (currFigure.Type == "Pawn")
+                                        {
+                                            currFigure.isFirstMoveForPawn = false;
+                                            if ((currFigure.isWhite && nextClick.Y == 0)
+                                                || (!currFigure.isWhite && nextClick.Y == 560))
+                                                Transformation(currFigure);
+                                        }
+                                        ListViewItem lvi = new ListViewItem();
+                                        lvi.Text = move.ToString();
+                                        form.listView1.Items.Add(lvi);
+                                        isWhiteMovingNow = !isWhiteMovingNow;
+                                        if (isWhiteMovingNow)
+                                            form.label2.Text = "Белые";
+                                        else
+                                            form.label2.Text = "Чёрные";
+                                    }
+                                    isClickedBefore = false;
+                                    currColor = Board.WhatColorNow(click);
+                                }
                             }
-                            isClickedBefore = false;
                         }
                         else
-                            DrawMove(g);
-                    }
-                    currColor = Board.WhatColorNow(click);
-                }
-                else
-                {
-                    currFigure = Figures.FindAndGetByPoint(click);
-                    if (currFigure != null)
-                    {
-                        currColor = Board.WhatColorNow(click);
-                        prevClick = click;
-                        isClickedBefore = true;
+                        {
+                            var figure = Figures.FindAndGetByPoint(click);
+                            if (figure != null)
+                            {
+                                if ((figure.isWhite && isWhiteMovingNow) || (!figure.isWhite && !isWhiteMovingNow))
+                                {
+                                    currFigure = Figures.FindAndGetByPoint(click);
+                                    if (currFigure != null)
+                                    {
+                                        currColor = Board.WhatColorNow(click);
+                                        prevClick = click;
+                                        isClickedBefore = true;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
+        private void Transformation(Figure Pawn)
+        {
+            var box = new CustomMessageBox(form);
+            form.Visible = false;
+            box.ShowDialog();
+            if (box.DialogResult == DialogResult.Cancel)
+            {
+                var result = box.ReturnData();
+                form.Visible = true;
+                if (result != "")
+                {
+                    Figures.Remove(Pawn);
+                    var image = GetImageByName(result, Pawn.isWhite);
+                    if (image != null)
+                    {
+                        Figures.Add(new Figure(nextClick, result, Pawn.isWhite, image, false));
+                        using (Graphics g = form.CreateGraphics())
+                        {
+                            g.DrawImage(image, nextClick.X, nextClick.Y, 70, 70);
+                        }
+                    }
+                    else throw new System.Exception("Nope! My bad :) (Image in transformation)");
+                }
+            }
+        }
+
+        private Image GetImageByName(string Name, bool isWhite)
+        {
+            switch (Name)
+            {
+                case "Queen":
+                    if (isWhite)
+                        return Image.FromFile(@"../../resources/queenW.png");
+                    else
+                        return Image.FromFile(@"../../resources/queenB.png");
+                case "Knight":
+                    if (isWhite)
+                        return Image.FromFile(@"../../resources/knightW.png");
+                    else
+                        return Image.FromFile(@"../../resources/knightB.png");
+                case "Rook":
+                    if (isWhite)
+                        return Image.FromFile(@"../../resources/rookW.png");
+                    else
+                        return Image.FromFile(@"../../resources/rookB.png");
+                case "Bishop":
+                    if (isWhite)
+                        return Image.FromFile(@"../../resources/bishopW.png");
+                    else
+                        return Image.FromFile(@"../../resources/bishopB.png");
+                default:
+                    return null;
+            }
+        }
+
         private Point GetClickLocation(Point ClickPoint)
         {
-            int X = ClickPoint.X;
-            int Y = ClickPoint.Y;
-            int prevX = 20;
+            var X = ClickPoint.X;
+            var Y = ClickPoint.Y;
+            var prevX = 20;
             for (int currX = 100; currX <= 660; currX += 80)
             {
                 if (X >= prevX && X <= currX)
@@ -162,7 +254,7 @@ namespace ChessGameSemestr
                 }
                 else prevX = currX;
             }
-            int prevY = 0;
+            var prevY = 0;
             for (int currY = 80; currY <= 640; currY += 80)
             {
                 if (Y >= prevY && Y <= currY)
