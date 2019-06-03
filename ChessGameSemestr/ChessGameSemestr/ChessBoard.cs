@@ -9,7 +9,7 @@ namespace ChessGameSemestr
         #region Variables
         private List<Figure> Figures = new List<Figure>();
         private List<PartOfBoard> Board = new List<PartOfBoard>();
-        private Form1 form;
+        private readonly Form1 form;
         private bool isClickedBefore = false;
         private Point prevClick;
         private Point nextClick;
@@ -17,6 +17,8 @@ namespace ChessGameSemestr
         private Figure currFigure = null;
         public bool isWhiteMovingNow { get; set; }
         public bool isGameStarted { get; set; }
+        public bool isShahForWhite { get; set; }
+        public bool isShahForBlack { get; set; }
         #endregion
 
         public ChessBoard(Form1 form)
@@ -27,12 +29,12 @@ namespace ChessGameSemestr
             FillTheBoard();
             isWhiteMovingNow = true;
             isGameStarted = false;
-        }      
+        }
 
         public void Draw()
         {
-            form.Paint += new PaintEventHandler(DrawField) 
-                + new PaintEventHandler(DrawSigns) 
+            form.Paint += new PaintEventHandler(DrawField)
+                + new PaintEventHandler(DrawSigns)
                 + new PaintEventHandler(DrawFigures);
         }
 
@@ -114,7 +116,7 @@ namespace ChessGameSemestr
             else
                 if ((nextClick.Y != 0 && currFigure.isWhite)
                     || (nextClick.Y != 560 && !currFigure.isWhite))
-                    Figures.Add(new Figure(nextClick, currFigure.Type, currFigure.isWhite, currFigure.Icon, false));
+                Figures.Add(new Figure(nextClick, currFigure.Type, currFigure.isWhite, currFigure.Icon, false));
             if (target != null)
                 Figures.Remove(target);
         }
@@ -157,6 +159,8 @@ namespace ChessGameSemestr
                                             form.label2.Text = "Белые";
                                         else
                                             form.label2.Text = "Чёрные";
+                                        isShahForBlack = CheckBlackKing();
+                                        isShahForWhite = CheckWhiteKing();
                                     }
                                     isClickedBefore = false;
                                     currColor = Board.WhatColorNow(click);
@@ -183,6 +187,38 @@ namespace ChessGameSemestr
                     }
                 }
             }
+        }
+
+        private bool CheckWhiteKing()
+        {
+            var king = Figures.GetWhiteKing();
+            foreach (var f in Figures)
+            {
+                if (!f.isWhite)
+                {
+                    var tempFigure = new Figure(king.Position, f.Type, f.isWhite, f.Icon, false);
+                    var move = new Move(tempFigure, king.Position, f.Position, Figures);
+                    if (move.isRight())
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckBlackKing()
+        {
+            var king = Figures.GetBlackKing();
+            foreach (var f in Figures)
+            {
+                if (f.isWhite)
+                {
+                    var tempFigure = new Figure(king.Position, f.Type, !f.isWhite, f.Icon, false);
+                    var move = new Move(tempFigure, king.Position, f.Position, Figures);
+                    if(move.isRight())
+                        return true;
+                }
+            }
+            return false;
         }
 
         private void Transformation(Figure Pawn)

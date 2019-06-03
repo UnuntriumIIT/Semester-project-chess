@@ -6,11 +6,13 @@ namespace ChessGameSemestr
 {
     public class Move
     {
+        #region Variables
         public Figure Figure;
         public Point From;
         public Point To;
         private List<Figure> figs;
         private Figure target;
+        #endregion
 
         public Move(Figure Figure, Point From, Point To, List<Figure> Figures)
         {
@@ -31,6 +33,32 @@ namespace ChessGameSemestr
             return c + Figure.Type.ToLower() + " from: " + f + " To: " + t;
         }
 
+        public bool isRight()
+        {
+            string type = Figure.Type;
+            if (type != "Knight" && !IsOverJump())
+            {
+                switch (type)
+                {
+                    case "Pawn":
+                        return CheckMoveForPawn();
+                    case "Rook":
+                        return CheckMoveForRook();
+                    case "Bishop":
+                        return CheckMoveForBishop();
+                    case "King":
+                        return CheckMoveForKing();
+                    case "Queen":
+                        return CheckMoveForBishop() || CheckMoveForRook();
+                }
+            }
+            else if (type == "Knight")
+                return CheckMoveForKnight();
+            return false;
+        }
+
+        #region Logic
+
         private string GetCoord(Point p)
         {
             var letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
@@ -39,58 +67,112 @@ namespace ChessGameSemestr
             return letters[(p.X - 20) / 80] + numbers[p.Y / 80];
         }
 
-        public bool isRight()
+        private bool IsOverJump()
         {
             string type = Figure.Type;
-            bool result = false;
             switch (type)
             {
-                case "Pawn":
-                    result = CheckMoveForPawn();
-                    break;
                 case "Rook":
-                    result = CheckMoveForRook();
-                    break;
+                    return CheckOverJumpForRook();
                 case "Bishop":
-                    result = CheckMoveForBishop();
-                    break;
-                case "King":
-                    result = CheckMoveForKing();
-                    break;
-                case "Knight":
-                    result = CheckMoveForKnight();
-                    break;
+                    return CheckOverJumpForBishop();
                 case "Queen":
-                    result = CheckMoveForQueen();
-                    break;
+                    return CheckOverJumpForBishop() || CheckOverJumpForRook();
             }
-            return result;
+            return false;
         }
 
-        private bool CheckMoveForQueen()
+        private bool CheckOverJumpForBishop()
         {
-            if (target == null)
+            if (From.X > To.X)
             {
-                if (From.X - To.X != 0 && From.Y - To.Y != 0)
-                    if (Math.Abs(From.X - To.X) == Math.Abs(From.Y - To.Y))
-                        return true;
-                if ((Math.Abs(From.X - To.X) <= 560 && From.Y - To.Y == 0)
-                    || Math.Abs(From.Y - To.Y) <= 560 && From.X - To.X == 0)
-                    return true;
+                if (From.Y > To.Y)
+                {
+                    var x = From.X - 80;
+                    var y = From.Y - 80;
+                    while (x > To.X && y > To.Y)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(x, y));
+                        x -= 80; y -= 80;
+                        if (f != null)
+                            return true;
+                    }
+                }
+                else
+                {
+                    var x = From.X - 80;
+                    var y = From.Y + 80;
+                    while (x > To.X && y < To.Y)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(x, y));
+                        x -= 80; y += 80;
+                        if (f != null)
+                            return true;
+                    }
+                }
             }
             else
             {
-                if ((!target.isWhite && Figure.isWhite)
-                    || (target.isWhite && !Figure.isWhite))
+                if (From.Y > To.Y)
                 {
-                    if (From.X - To.X != 0 && From.Y - To.Y != 0)
-                        if (Math.Abs(From.X - To.X) == Math.Abs(From.Y - To.Y))
+                    var x = From.X + 80;
+                    var y = From.Y - 80;
+                    while (x < To.X && y > To.Y)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(x, y));
+                        x += 80; y -= 80;
+                        if (f != null)
                             return true;
-                    if ((Math.Abs(From.X - To.X) <= 560 && From.Y - To.Y == 0)
-                    || Math.Abs(From.Y - To.Y) <= 560 && From.X - To.X == 0)
-                        return true;
+                    }
+                }
+                else
+                {
+                    var x = From.X + 80;
+                    var y = From.Y + 80;
+                    while (x < To.X && y < To.Y)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(x, y));
+                        x += 80; y += 80;
+                        if (f != null)
+                            return true;
+                    }
                 }
             }
+            return false;
+        }
+
+        private bool CheckOverJumpForRook()
+        {
+            if (From.X - To.X == 0)
+                if (From.Y > To.Y)
+                    for (var y = From.Y - 80; y > To.Y; y -= 80)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(From.X, y));
+                        if (f != null)
+                            return true;
+                    }
+                else
+                    for (var y = From.Y + 80; y < To.Y; y += 80)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(From.X, y));
+                        if (f != null)
+                            return true;
+                    }
+            if (From.Y - To.Y == 0)
+                if (From.X > To.X)
+                    for (var x = From.X - 80; x > To.X; x -= 80)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(x, From.Y));
+                        if (f != null)
+                            return true;
+                    }
+                else
+                    for (var x = From.X + 80; x < To.X; x += 80)
+                    {
+                        var f = figs.FindAndGetByPoint(new Point(x, From.Y));
+                        if (f != null)
+                            return true;
+                    }
             return false;
         }
 
@@ -242,5 +324,7 @@ namespace ChessGameSemestr
                 return false;
             }                    
         }
+
+        #endregion
     }
 }
