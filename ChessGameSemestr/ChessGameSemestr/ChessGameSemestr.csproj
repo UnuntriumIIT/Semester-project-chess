@@ -53,6 +53,12 @@
     <Compile Include="CustomMessageBox.Designer.cs">
       <DependentUpon>CustomMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="EndGameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EndGameForm.Designer.cs">
+      <DependentUpon>EndGameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ListExtension.cs" />
     <Compile Include="Figure.cs" />
     <Compile Include="Form1.cs">
@@ -67,6 +73,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CustomMessageBox.resx">
       <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EndGameForm.resx">
+      <DependentUpon>EndGameForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

@@ -29,3 +29,4 @@ C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj
 C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.exe
 C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.pdb
 C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.CustomMessageBox.resources
+C:\Users\zepho\Desktop\GIT\Semestr-project\ChessGameSemestr\ChessGameSemestr\obj\Debug\ChessGameSemestr.EndGameForm.resources

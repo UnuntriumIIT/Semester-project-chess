@@ -12,15 +12,17 @@ namespace ChessGameSemestr
         public Point To;
         private List<Figure> figs;
         private Figure target;
+        private readonly Form1 form;
         #endregion
 
-        public Move(Figure Figure, Point From, Point To, List<Figure> Figures)
+        public Move(Figure Figure, Point From, Point To, List<Figure> Figures, Form1 form)
         {
             this.Figure = Figure;
             this.From = From;
             this.To = To;
             figs = Figures;
             target = figs.FindAndGetByPoint(To);
+            this.form = form;
         }
 
         public override string ToString()

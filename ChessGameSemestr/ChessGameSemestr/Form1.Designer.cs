@@ -29,6 +29,7 @@
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.ListView listView1;
         public System.Windows.Forms.Label label2;
+        public System.Windows.Forms.Label label4;
     }
 }
 

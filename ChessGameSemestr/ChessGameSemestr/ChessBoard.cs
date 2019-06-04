@@ -17,8 +17,6 @@ namespace ChessGameSemestr
         private Figure currFigure = null;
         public bool isWhiteMovingNow { get; set; }
         public bool isGameStarted { get; set; }
-        public bool isShahForWhite { get; set; }
-        public bool isShahForBlack { get; set; }
         #endregion
 
         public ChessBoard(Form1 form)
@@ -139,11 +137,24 @@ namespace ChessGameSemestr
                             {
                                 if ((currFigure.isWhite && isWhiteMovingNow) || (!currFigure.isWhite && !isWhiteMovingNow))
                                 {
-                                    var move = new Move(currFigure, prevClick, click, Figures);
+                                    var move = new Move(currFigure, prevClick, click, Figures, form);
                                     if (move.isRight())
                                     {
                                         nextClick = click;
                                         DrawMove(g);
+                                        if (!IsShahForBlack() && !IsShahForWhite())
+                                            form.label4.Text = "";
+                                        if (IsShahForBlack())
+                                            form.label4.Text = "У чёрных ШАХ!";
+                                        if (IsShahForWhite())
+                                            form.label4.Text = "У белых ШАХ!";
+                                        if (IsMat())
+                                        {
+                                            var end = new EndGameForm(isWhiteMovingNow);
+                                            form.Visible = false;
+                                            end.Show();
+                                            return;
+                                        }
                                         if (currFigure.Type == "Pawn")
                                         {
                                             currFigure.isFirstMoveForPawn = false;
@@ -159,8 +170,6 @@ namespace ChessGameSemestr
                                             form.label2.Text = "Белые";
                                         else
                                             form.label2.Text = "Чёрные";
-                                        isShahForBlack = CheckBlackKing();
-                                        isShahForWhite = CheckWhiteKing();
                                     }
                                     isClickedBefore = false;
                                     currColor = Board.WhatColorNow(click);
@@ -189,33 +198,48 @@ namespace ChessGameSemestr
             }
         }
 
-        private bool CheckWhiteKing()
+        private bool IsMat()
+        {
+            var blackKing = Figures.GetBlackKing();
+            var whiteKing = Figures.GetWhiteKing();
+            if (blackKing == null || whiteKing == null)
+                return true;
+            return false;
+        }
+
+            private bool IsShahForWhite()
         {
             var king = Figures.GetWhiteKing();
-            foreach (var f in Figures)
+            if (king != null)
             {
-                if (!f.isWhite)
+                foreach (var f in Figures)
                 {
-                    var tempFigure = new Figure(king.Position, f.Type, f.isWhite, f.Icon, false);
-                    var move = new Move(tempFigure, king.Position, f.Position, Figures);
-                    if (move.isRight())
-                        return true;
+                    if (!f.isWhite)
+                    {
+                        var tempFigure = new Figure(king.Position, f.Type, f.isWhite, f.Icon, false);
+                        var move = new Move(tempFigure, king.Position, f.Position, Figures, form);
+                        if (move.isRight())
+                            return true;
+                    }
                 }
             }
             return false;
         }
 
-        private bool CheckBlackKing()
+        private bool IsShahForBlack()
         {
             var king = Figures.GetBlackKing();
-            foreach (var f in Figures)
+            if (king != null)
             {
-                if (f.isWhite)
+                foreach (var f in Figures)
                 {
-                    var tempFigure = new Figure(king.Position, f.Type, !f.isWhite, f.Icon, false);
-                    var move = new Move(tempFigure, king.Position, f.Position, Figures);
-                    if(move.isRight())
-                        return true;
+                    if (f.isWhite)
+                    {
+                        var tempFigure = new Figure(king.Position, f.Type, !f.isWhite, f.Icon, false);
+                        var move = new Move(tempFigure, king.Position, f.Position, Figures, form);
+                        if (move.isRight())
+                            return true;
+                    }
                 }
             }
             return false;

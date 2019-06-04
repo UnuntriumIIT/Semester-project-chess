@@ -95,6 +95,7 @@ namespace ChessGameSemestr
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // close
@@ -178,9 +179,18 @@ namespace ChessGameSemestr
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Tile;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(788, 81);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(0, 13);
+            this.label4.TabIndex = 9;
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1000, 700);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
